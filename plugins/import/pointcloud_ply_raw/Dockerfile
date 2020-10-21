@@ -6,10 +6,10 @@ FROM ${REGISTRY}/base-py:${TAG}
 ##############################################################################
 
 RUN apt-get update
-RUN apt-get install libpcl-dev -y
-RUN pip install python-pcl
+#RUN apt-get install libpcl-dev -y
+#RUN pip install python-pcl
 RUN conda install -c conda-forge scikit-image
-RUN python -m pip install open3d==0.9
+RUN python -m pip install open3d==0.11.0
 
 ############### copy code ###############
 ARG MODULE_PATH

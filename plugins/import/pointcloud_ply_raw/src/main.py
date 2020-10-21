@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-import pcl
+#import pcl
 import open3d as o3d
 
 from supervisely_lib.io.json import load_json_file

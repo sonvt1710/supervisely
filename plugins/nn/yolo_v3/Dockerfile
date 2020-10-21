@@ -5,15 +5,18 @@ FROM ${REGISTRY}/base-py:${TAG}
 ##############################################################################
 # devel components
 ##############################################################################
+#ENV NCCL_VERSION 2.7.8
+# TODO: https://gitlab.com/nvidia/container-images/cuda/-/commit/8df3d50221d673066e95d57decc683670457dd28
+RUN apt-get update
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-libraries-dev-$CUDA_PKG_VERSION \
         cuda-nvml-dev-$CUDA_PKG_VERSION \
         cuda-minimal-build-$CUDA_PKG_VERSION \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
         cuda-core-9-0=9.0.176.3-1 \
-        cuda-cublas-dev-9-0=9.0.176.4-1 \
-        libnccl-dev=$NCCL_VERSION-1+cuda9.0 && \
+        cuda-cublas-dev-9-0=9.0.176.4-1 && \
     rm -rf /var/lib/apt/lists/*
+#libnccl-dev=$NCCL_VERSION-1+cuda9.0 && \
 
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 ENV CUDNN_VERSION 7.4.2.24
@@ -24,17 +27,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends --allow-change-
 
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
-RUN apt-get update && \
-    apt-get install -y \
-    libopencv-dev=2.4.9.1+dfsg-1.5ubuntu1.1 && \
-    ldconfig
+RUN apt-get update && apt-get install -y libopencv-dev=2.4.9.1+dfsg-1.5ubuntu1.1
 
 RUN pip install --no-cache-dir \
         pyclipper \
         cython
 
 # OpenCV with version 3.4.1 (in base) has bug for C headers.
-RUN conda install --no-update-deps -y opencv=3.4.2
+#RUN conda install --no-update-deps -y opencv=3.4.11
 
 ############### copy code ###############
 ARG MODULE_PATH

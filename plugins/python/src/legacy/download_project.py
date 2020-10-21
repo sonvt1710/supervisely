@@ -3,7 +3,7 @@ import supervisely_lib as sly
 
 WORKSPACE_ID = int('%%WORKSPACE_ID%%')
 src_project_name = '%%IN_PROJECT_NAME%%'
-src_dataset_ids = %%DATASET_IDS:None%%
+src_dataset_ids = '%%DATASET_IDS:None%%'
 
 api = sly.Api(server_address=os.environ['SERVER_ADDRESS'], token=os.environ['API_TOKEN'])
 

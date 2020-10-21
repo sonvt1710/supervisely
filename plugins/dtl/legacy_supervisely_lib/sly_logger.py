@@ -6,7 +6,7 @@ import datetime
 import os
 from collections import namedtuple
 from enum import Enum
-import simplejson
+#import simplejson
 from pythonjsonlogger import jsonlogger
 
 
@@ -105,15 +105,15 @@ def _get_default_logging_fields():
     return ' '.join(['%({0:s})'.format(k) for k in supported_keys])
 
 
-def dumps_ignore_nan(obj, *args, **kwargs):
-    return simplejson.dumps(obj, ignore_nan=True, *args, **kwargs)
+#def dumps_ignore_nan(obj, *args, **kwargs):
+#    return simplejson.dumps(obj, ignore_nan=True, *args, **kwargs)
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
     additional_fields = {}
 
     def __init__(self, format_string):
-        super().__init__(format_string, json_serializer=dumps_ignore_nan)
+        super().__init__(format_string)#, json_serializer=dumps_ignore_nan)
 
     def process_log_record(self, log_record):
         log_record['timestamp'] = log_record.pop('asctime', None)

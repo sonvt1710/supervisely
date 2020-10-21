@@ -7,7 +7,7 @@
         "train": "train"
       },
       "batch_size": {
-        "train": 2
+        "train": 8
       },
       "subdivisions": {
         "train": 1,

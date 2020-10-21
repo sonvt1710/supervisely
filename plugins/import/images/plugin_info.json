@@ -1,5 +1,6 @@
 {
 	"title": "Images",
 	"description": "Supported formats: images, directory with images",
-	"type": "import"
+	"type": "import",
+	"run_mode": "general_plugin"
 }

@@ -7,8 +7,8 @@
       "epochs": 5,
       "val_every": 0.5,
       "batch_size": {
-        "val": 1,
-        "train": 1
+        "val": 8,
+        "train": 8
       },
       "input_size": {
         "width": 2049,

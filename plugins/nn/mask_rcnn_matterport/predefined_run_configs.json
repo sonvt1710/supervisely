@@ -6,8 +6,8 @@
       "lr": 0.001,
       "epochs": 5,
       "batch_size": {
-        "val": 1,
-        "train": 1
+        "val": 4,
+        "train": 4
       },
       "input_size": {
         "max_dim": 256,
