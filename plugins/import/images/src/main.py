@@ -73,11 +73,18 @@ def add_images_to_project():
 
         for batch_names, batch_hashes, batch_paths in zip(sly.batched(names, 10), sly.batched(hashes, 10), sly.batched(paths, 10)):
             if need_download is True:
+                res_batch_names = []
+                res_batch_paths = []
                 api.image.download_paths_by_hashes(batch_hashes, batch_paths)
-                for path in batch_paths:
-                    img = sly.image.read(path, remove_alpha_channel)
-                    sly.image.write(path, img, remove_alpha_channel)
-                api.image.upload_paths(ds_info.id, batch_names, batch_paths)
+                for name, path in zip(batch_names, batch_paths):
+                    try:
+                        img = sly.image.read(path, remove_alpha_channel)
+                        sly.image.write(path, img, remove_alpha_channel)
+                        res_batch_names.append(name)
+                        res_batch_paths.append(path)
+                    except Exception as e:
+                        sly.logger.warning("Skip image {!r}: {}".format(name, str(e)), extra={'file_path': path})
+                api.image.upload_paths(ds_info.id, res_batch_names, res_batch_paths)
                 sly.fs.clean_dir(sly.TaskPaths.RESULTS_DIR)
             else:
                 api.image.upload_hashes(ds_info.id, batch_names, batch_hashes, progress_cb=progress.iters_done_report)

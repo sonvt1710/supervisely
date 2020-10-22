@@ -34,7 +34,9 @@ RUN pip install --no-cache-dir \
         cython
 
 # OpenCV with version 3.4.1 (in base) has bug for C headers.
-#RUN conda install --no-update-deps -y opencv=3.4.11
+#RUN conda install --no-update-deps -y opencv=3.4.1
+conda install --no-update-deps -y -c conda-forge/label/gcc7 opencv
+#RUN conda install -y -c conda-forge opencv
 
 ############### copy code ###############
 ARG MODULE_PATH
