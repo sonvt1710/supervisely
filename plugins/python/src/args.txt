@@ -1,0 +1,4 @@
+dst_test_select = '%%TEST_SELECT:val 1|val 2|val 3|val 4%%'
+dst_test_select_dafault = '%%TEST_SELECT_DEFAULT:"val 3":"val1"|"val 2"|"val3"|"val4"%%'
+dst_test_boolean = strtobool('%%TEST_BOOLEAN:true|false%%')
+dst_test_boolean_default = strtobool('%%TEST_BOOLEAN_DEFAULT:true:false|true%%')
