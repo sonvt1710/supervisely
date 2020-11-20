@@ -3,8 +3,8 @@
         "title": "settings",
         "type": "import",
         "config": {
-            "normalize_exif": true,
-            "remove_alpha_channel": true
+            "normalize_exif": false,
+            "remove_alpha_channel": false
     }
   }
 ]

@@ -1,6 +1,9 @@
 # Import Images
 
-This plugin allows you to upload only images without any annotations. 
+This plugin allows you to upload only images without any annotations. By default flags "normalize_exif" and 
+"remove_alpha_channel" are disabled. If images you import has exif rotation or they look rotated in labeling interfaces
+please enable "normalize_exif" flag: `"normalize_exif": true`. If your images have alpha channel, enable 
+"remove_alpha_channel" flag:  `"remove_alpha_channel": true`.
 
 #### Input files structure
 
