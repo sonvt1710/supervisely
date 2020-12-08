@@ -12,5 +12,5 @@ api = sly.Api(server_address=os.environ['SERVER_ADDRESS'], token=os.environ['API
 sly.logger.info('DOWNLOAD_PROJECT', extra={'title': src_project_name})
 project = api.project.get_info_by_name(WORKSPACE_ID, src_project_name)
 download_dir = os.path.join(sly.TaskPaths.OUT_ARTIFACTS_DIR, src_project_name)
-sly.download_project(api, project.id, download_dir, dataset_ids=src_dataset_ids, log_progress=True)
+sly.download_project(api, project.id, download_dir, dataset_ids=src_dataset_ids, log_progress=True, batch_size=10)
 sly.logger.info('Project {!r} has been successfully downloaded.'.format(src_project_name))
