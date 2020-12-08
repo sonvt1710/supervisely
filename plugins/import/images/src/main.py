@@ -37,14 +37,22 @@ def add_images_to_project():
     if project_name is None:
         project_name = task_config["res_names"]["project"]
 
+    files_list = api.task.get_import_files_list(task_id)
+    if len(files_list) == 0:
+        raise RuntimeError("There are no import files")
+
     project_info = None
     if append_to_existing_project is True:
         project_info = api.project.get_info_by_name(workspace_id, project_name, expected_type=sly.ProjectType.IMAGES, raise_error=True)
     else:
         project_info = api.project.create(workspace_id, project_name, type=sly.ProjectType.IMAGES, change_name_if_conflict=True)
 
-    files_list = api.task.get_import_files_list(task_id)
     dataset_to_item = defaultdict(dict)
+    for dataset in api.dataset.get_list(project_info.id):
+        images = api.image.get_list(dataset.id)
+        for image_info in images:
+            dataset_to_item[dataset.name][image_info.name] = None
+
     for file_info in files_list:
         original_path = file_info["filename"]
         try:
@@ -52,6 +60,7 @@ def add_images_to_project():
             item_hash = file_info["hash"]
             ds_name = get_dataset_name(original_path)
             item_name = sly.fs.get_file_name_with_ext(original_path)
+
             if item_name in dataset_to_item[ds_name]:
                 temp_name = sly.fs.get_file_name(original_path)
                 temp_ext = sly.fs.get_file_ext(original_path)
@@ -66,8 +75,16 @@ def add_images_to_project():
     for ds_name, ds_items in dataset_to_item.items():
         ds_info = api.dataset.get_or_create(project_info.id, ds_name)
 
-        names = list(ds_items.keys())
-        hashes = list(ds_items.values())
+        names = [] # list(ds_items.keys())
+        hashes = [] #list(ds_items.values())
+        for name, hash in ds_items.items():
+            if hash is None:
+                #existing image => skip
+                continue
+            else:
+                names.append(name)
+                hashes.append(hash)
+
         paths = [os.path.join(sly.TaskPaths.RESULTS_DIR, h.replace("/", "a") + sly.image.DEFAULT_IMG_EXT) for h in hashes]
         progress = sly.Progress('Dataset: {!r}'.format(ds_name), len(ds_items))
 
@@ -85,10 +102,13 @@ def add_images_to_project():
                     except Exception as e:
                         sly.logger.warning("Skip image {!r}: {}".format(name, str(e)), extra={'file_path': path})
                 api.image.upload_paths(ds_info.id, res_batch_names, res_batch_paths)
-                sly.fs.clean_dir(sly.TaskPaths.RESULTS_DIR)
+
+                for path in res_batch_paths:
+                    sly.fs.silent_remove(path)
+                #sly.fs.clean_dir(sly.TaskPaths.RESULTS_DIR)
+                progress.iters_done_report(len(batch_names))
             else:
                 api.image.upload_hashes(ds_info.id, batch_names, batch_hashes, progress_cb=progress.iters_done_report)
-            progress.iters_done_report(len(batch_names))
 
     if project_info is not None:
         sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_info.id})
