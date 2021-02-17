@@ -8,7 +8,9 @@ FROM ${REGISTRY}/base-py:${TAG}
 RUN apt-get update
 #RUN apt-get install libpcl-dev -y
 #RUN pip install python-pcl
-RUN conda install -c conda-forge scikit-image
+#RUN apt-get install python-skimage
+RUN pip install scikit-image
+#RUN conda install -c conda-forge scikit-image
 RUN python -m pip install open3d==0.11.0
 
 ############### copy code ###############

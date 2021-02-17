@@ -43,14 +43,17 @@ def add_pointclouds_to_project():
         ext = sly.fs.get_file_ext(original_path)
         save_path = project_dir + original_path
         path_info_map[save_path] = file_info
-        if ext == '.json':
-            api.task.download_import_file(task_id, original_path, save_path)
-        else:
-            if sly.PointcloudDataset.related_images_dir_name in save_path:
-                sly.image.validate_ext(save_path)
+        try:
+            if ext == '.json':
+                api.task.download_import_file(task_id, original_path, save_path)
             else:
-                sly.pointcloud.validate_ext(ext)
-            sly.fs.touch(save_path)
+                if sly.PointcloudDataset.related_images_dir_name in save_path:
+                    sly.image.validate_ext(save_path)
+                else:
+                    sly.pointcloud.validate_ext(ext)
+                sly.fs.touch(save_path)
+        except Exception as e:
+            sly.logger.warn(f"Unsupported file {original_path}")
 
     # files structure without original video files is done
     # validate project structure
