@@ -7,6 +7,7 @@ FROM ${REGISTRY}/base-py:${TAG}
 
 RUN pip install pydicom==2.1.2
 RUN pip install gdcm==1.1
+RUN pip install SimpleITK==2.0.2
 RUN pip install pylibjpeg pylibjpeg-libjpeg
 ############### copy code ###############
 ARG MODULE_PATH

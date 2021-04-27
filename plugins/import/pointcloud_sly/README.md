@@ -28,4 +28,4 @@ my_project
 
 Project directory `my_project` contains single dataset `ds0`, file `key_id_map.json` that maps supervisely ids to uniq keys, and file `meta.json` with information about project classes and tags.
 
-Dataset folder consists of annotation folder `ann`, folder with pointcloud files in `.pcd` format and optional folder `related_images`. Items in these directorias can be matched by names. 
+Dataset folder consists of annotation folder `ann`, folder with pointcloud files in `.pcd` format and optional folder `related_images`. Items in these directories can be matched by names. 

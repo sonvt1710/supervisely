@@ -6,6 +6,8 @@ import glob
 import cv2
 import numpy as np
 
+import SimpleITK as sitk
+
 import pydicom
 from pydicom.multival import MultiValue
 from pydicom.pixel_data_handlers.util import convert_color_space
@@ -88,8 +90,11 @@ def prepare_dicom_image(im_arr, dicom_obj):
     return img
 
 
-def extract_images_from_dicom(dicom_obj):
-    pixel_array = dicom_obj.pixel_array
+def extract_images_from_dicom(dicom_obj, filepath):
+    itk_img = sitk.ReadImage(filepath)
+    pixel_array = sitk.GetArrayViewFromImage(itk_img)
+
+    #pixel_array = dicom_obj.pixel_array
     interpretation_str = str(getattr(dicom_obj, 'PhotometricInterpretation', None))
     if interpretation_str in ('YBR_FULL_422', 'YBR_FULL'):
         pixel_array = convert_color_space(pixel_array, interpretation_str, 'RGB')
@@ -134,7 +139,7 @@ def convert():
 
                 # Extract images (DICOM file may contain few images)
                 base_name = os.path.basename(dicom_filename)
-                images = extract_images_from_dicom(dicom_obj)
+                images = extract_images_from_dicom(dicom_obj, dicom_filename)
 
                 for image_index, image in enumerate(images):
                     sample_name = base_name
@@ -181,4 +186,6 @@ def main():
 
 
 if __name__ == '__main__':
-    sly.main_wrapper('IMAGES_ONLY_IMPORT', main)
+    #@TODO: for debug
+    #sly.fs.clean_dir(sly.TaskPaths.RESULTS_DIR)
+    sly.main_wrapper('DICOM_TO_IMAGES_IMPORT', main)
